@@ -1,0 +1,37 @@
+version: '3'
+services:
+    app:
+        # for build image from dockerfile
+        # container_name: node
+        # restart: always
+        # build: ./node #for build
+
+        # for download image from dockerhub 
+        container_name: node
+        image: node:13.10.1-stretch
+        ports:
+            - 3000:3000
+        volumes: 
+            - ./node:/usr/src/app
+        # environment:
+            # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            # ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        working_dir: /usr/src/app
+        depends_on: 
+            - mongo
+        command: node app.js
+    mongo:
+        container_name: mongo
+        image: mongo:3.6.17-xenial
+        restart: always
+        ports: 
+            - 27017:27017
+        volumes:
+            - type=bind
+              source-./mongoDB/data
+              target=/data/db
+            # - ./mongoDB/data:/data/db
+        # environment:
+            # MONGO_INITDB_ROOT_USERNAME: root
+            # MONGO_INITDB_ROOT_PASSWORD: example
+        command: mongod
